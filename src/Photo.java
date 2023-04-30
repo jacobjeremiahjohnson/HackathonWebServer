@@ -1,4 +1,7 @@
+import java.io.File;
+
 public class Photo {
+    private final File image;
     private int id;
     private String name;
     private String base64;
@@ -6,27 +9,18 @@ public class Photo {
     private String longitude;
     private String description;
 
-    public Photo(int id, String name, String base64, String latitude, String longitude, String description) {
+    public Photo(int id, String name, String latitude, String longitude, String description, File image) {
         this.id = id;
         this.name = name;
-        this.base64 = base64;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.image = image;
     }
 
     public int getId() {
         return id;
     }
-
-    public String getBase64() {
-        return base64;
-    }
-
-    public void setBase64(String base64) {
-        this.base64 = base64;
-    }
-
     public String getLatitude() {
         return latitude;
     }
@@ -52,11 +46,11 @@ public class Photo {
     }
 
     public String getName() {
-        return description;
+        return name;
     }
 
     public void setName(String description) {
-        this.description = description;
+        this.name = name;
     }
 
     @Override
