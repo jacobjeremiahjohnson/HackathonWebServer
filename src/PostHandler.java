@@ -1,10 +1,13 @@
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import org.json.JSONStringer;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -12,21 +15,48 @@ public class PostHandler implements HttpHandler {
     int nextId = 1;
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        System.out.println("POST");
-        InputStream requestBody = exchange.getRequestBody();
-        JSONObject userJson = new JSONObject(readRequestBody(requestBody));
-        String name = userJson.getString("name");
-        String base64 = userJson.getString("base64");
-        String latitude = userJson.getString("latitude");
-        String longitude = userJson.getString("longitude");
-        String description = userJson.getString("description");
+    public void handle(HttpExchange exchange) {
 
-        Photo photo = new Photo(nextId++, name, base64, latitude, longitude, description);
+        try {
+            Headers headers = exchange.getResponseHeaders();
+            headers.set("Access-Control-Allow-Origin", "*");
+            headers.set("Access-Control-Allow-Methods", "POST");
+            headers.set("Access-Control-Allow-Headers", "Content-Type");
 
-        App.photos.put(photo.getId(), photo);
+            InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
+            BufferedReader br = new BufferedReader(isr);
+            String postData = br.readLine();
 
-        sendResponse(exchange, 201, new JSONObject(photo).toString());
+            // Process the post data here
+            String response = "POST request received: " + postData;
+            // Send response
+
+            if (postData != null) {
+
+                postData = postData.replaceAll("\r?\n", "");
+                JsonReader reader = Json.createReader(new StringReader(postData));
+                JsonObject jsonObject = reader.readObject();
+                reader.close();
+
+                String name = jsonObject.getString("name");
+                String base64 = jsonObject.getString("base64");
+                String latitude = jsonObject.getString("latitude");
+                String longitude = jsonObject.getString("longitude");
+                String description = jsonObject.getString("description");
+
+                Photo photo = new Photo(nextId++, name, base64, latitude, longitude, description);
+
+                App.photos.put(photo.getId(), photo);
+            }
+
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String message) throws IOException {

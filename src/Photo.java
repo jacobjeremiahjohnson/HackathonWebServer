@@ -58,4 +58,9 @@ public class Photo {
     public void setName(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString(){
+        return this.name + " : " + this.id;
+    }
 }
