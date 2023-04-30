@@ -48,6 +48,9 @@ public class Database {
 
         File dir = new File("src");
         File[] directoryListing = dir.listFiles();
+
+        App.pictures.clear();
+
         if (directoryListing != null){
             for (File child : directoryListing){
                 if (child.getName().endsWith(".jpg")) {

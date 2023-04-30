@@ -17,7 +17,6 @@ public class App {
     public static ArrayList<Photo> photos = new ArrayList<>();
     public static ArrayList<File> pictures = new ArrayList<>();
 
-
     public static int id = 0;
 
     public static void main(String[] args) throws IOException {
@@ -28,6 +27,8 @@ public class App {
         pictures.add(new File("src/2.jpg"));
         photos.add(2, new Photo(2, "Rehoboth Beach Bandstand", "38.71660416383861", "-75.07662814168542", "In the middle of the Rehoboth Boardwalk, the Rehoboth Beach Bandstand regularly hosts local musical groups to entertain beachgoers year-round."));
         pictures.add(new File("src/3.jpg"));
+        photos.add(3, new Photo(3, "Dover Motor Speedway", "39.1883531729686", "-75.52613171715872", "NASCAR race track featuring a big rock monster. Don't forget ear protection, but it makes a great daytrip."));
+        photos.add(4, new Photo(4, "Gore Hall Classroom", "39.680476", "-75.7532042", "A classroom in UD's Gore Hall, this building is most famous for hosting the 2023 Hen Hack Hackathon. "));
 
         Database.writeFile();
 

@@ -55,12 +55,12 @@ public class PostHandler implements HttpHandler {
                     String longitude = jsonObject.getString("longitude");
                     String description = jsonObject.getString("description");
 
-                    photo = new Photo(App.id, name, latitude, longitude, description);
+                    App.id = App.photos.size();
+                    photo = new Photo(App.id-1, name, latitude, longitude, description);
 
-                    App.photos.add(photo.getId(), photo);
+                    App.photos.add(photo);
 
                     Database.writeFile();
-                    Database.readFile();
                 }
 
             } else if (requestHeaders.get("Content-type") != null && requestHeaders.get("Content-type").get(0).equals("image/jpeg")){
@@ -71,8 +71,8 @@ public class PostHandler implements HttpHandler {
                 int bytesRead;
                 OutputStream outputStream = null;
                 try {
-                    App.id++;
-                    int filename = App.id + 1;
+                    App.id = App.photos.size();
+                    int filename = App.id;
                     File outputFile = new File("src/" + filename + ".jpg");
                     outputStream = new FileOutputStream(outputFile);
                     while ((bytesRead = inputStream.read(buffer)) != -1) {

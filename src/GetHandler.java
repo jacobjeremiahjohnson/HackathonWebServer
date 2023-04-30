@@ -34,15 +34,19 @@ public class GetHandler implements HttpHandler {
 
             if (path[3].equals("json")) {
                 System.out.println(App.photos);
-                Photo photo = App.photos.get(parseInt(id));
-                System.out.println(photo.getName());
-                System.out.println(photo.getDescription());
-                System.out.println(id);
+                App.photos = Database.readFile();
+                Photo Thephoto = null;
+                for (Photo photo : App.photos){
+                    String sid = Integer.toString(photo.getId());
+                    if(sid.equals(id)){
+                        Thephoto = photo;
+                    }
+                }
 
-                if (photo == null) {
+                if (Thephoto == null) {
                     sendResponse(exchange, 404, "Not Found");
                 } else {
-                    sendResponse(exchange, 200, new JSONObject(photo).toString());
+                    sendResponse(exchange, 200, new JSONObject(Thephoto).toString());
                 }
             } else if (path[3].equals("image")) {
                 System.out.println("image");
