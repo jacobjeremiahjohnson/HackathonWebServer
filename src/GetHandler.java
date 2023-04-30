@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 
 public class GetHandler implements HttpHandler {
     @Override
@@ -32,7 +34,7 @@ public class GetHandler implements HttpHandler {
 
             if (path[3].equals("json")) {
                 System.out.println(App.photos);
-                Photo photo = App.photos.get(Integer.parseInt(id));
+                Photo photo = App.photos.get(parseInt(id));
                 System.out.println(photo.getName());
                 System.out.println(photo.getDescription());
                 System.out.println(id);
@@ -44,7 +46,7 @@ public class GetHandler implements HttpHandler {
                 }
             } else if (path[3].equals("image")) {
                 System.out.println("image");
-                File file = new File("src/" + (Integer.parseInt(id) + 1) + ".jpg");
+                File file = App.pictures.get(parseInt(id));
 
                 exchange.sendResponseHeaders(200, file.length());
                 OutputStream outputStream = exchange.getResponseBody();

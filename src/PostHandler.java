@@ -14,10 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PostHandler implements HttpHandler {
-    int nextId = 1;
 
     @Override
     public void handle(HttpExchange exchange) {
+
+        Photo photo;
 
         try {
             Headers headers = exchange.getResponseHeaders();
@@ -54,9 +55,12 @@ public class PostHandler implements HttpHandler {
                     String longitude = jsonObject.getString("longitude");
                     String description = jsonObject.getString("description");
 
-                    Photo photo = new Photo(nextId++, name, latitude, longitude, description, App.pictures.get(nextId-1));
+                    photo = new Photo(App.id, name, latitude, longitude, description);
 
-                    App.photos.put(photo.getId(), photo);
+                    App.photos.add(photo.getId(), photo);
+
+                    Database.writeFile();
+                    Database.readFile();
                 }
 
             } else if (requestHeaders.get("Content-type") != null && requestHeaders.get("Content-type").get(0).equals("image/jpeg")){
@@ -67,7 +71,9 @@ public class PostHandler implements HttpHandler {
                 int bytesRead;
                 OutputStream outputStream = null;
                 try {
-                    File outputFile = new File(nextId + 1 + ".jpg");
+                    App.id++;
+                    int filename = App.id + 1;
+                    File outputFile = new File("src/" + filename + ".jpg");
                     outputStream = new FileOutputStream(outputFile);
                     while ((bytesRead = inputStream.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
